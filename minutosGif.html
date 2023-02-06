@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div style="margin: auto;">
+        <div style="margin:auto; width: auto;">
+            <div style="padding: 10px; background: #f5da55">
+                <div id="capture" style="display: flex; flex-direction: column; width: fit-content;">
+                    <span id="secondsCounter" style="font-family: 'Arial';
+                    font-style: normal;
+                    font-weight: 600;
+                    font-size: 64px;
+                    margin: auto;
+                    width: fit-content;
+                    color: #0f265c;"></span>
+                    <span style="font-family: 'Arial';
+                    font-style: normal;
+                    font-weight: 600;
+                    font-size: 20px;
+                    margin: auto;
+                    width: fit-content;
+                    color: #0f265c;">
+                        Minutos
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="canvasDrawer">
+
+    </div>
+
+    <canvas id="bitmap"></canvas>
+
+
+    <script src="http://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+    <script src="./b64.js"></script>
+<script src="../LZWEncoder.js"></script>
+<script src="../NeuQuant.js"></script>
+<script src="../GIFEncoder.js"></script>
+
+    <script>
+        // var contMinutos=59;
+        // document.getElementById("secondsCounter").innerHTML = contMinutos;
+
+        // html2canvas(document.querySelector("#capture")).then(canvas2 => {
+        //     var e =document.getElementById("canvasDrawer");
+        //     e.appendChild(canvas2);
+
+        // });
+
+        // var t=setInterval(()=>{
+        //     contMinutos=contMinutos-1;
+        //     if(contMinutos<0)
+        //         contMinutos=59;
+        //     document.getElementById("secondsCounter").innerHTML = contMinutos;
+
+            
+
+        //     html2canvas(document.querySelector("#capture")).then(canvas2 => {
+        //         var e =document.getElementById("canvasDrawer");
+                
+        //         var child = e.lastElementChild; 
+        //         while (child) {
+        //             e.removeChild(child);
+        //             child = e.lastElementChild;
+        //         }
+        //         e.appendChild(canvas2)
+        //     });
+
+        // },1000);
+
+
+        
+    </script>
+    <script>
+        
+        async function testCanvasGif()
+        {
+            var canvas = document.getElementById('bitmap');
+        var context = canvas.getContext('2d');        
+
+        var encoder = new GIFEncoder();
+        encoder.setRepeat(1); //auto-loop
+        encoder.setDelay(1000*60);
+        canvas.width = 150;
+        canvas.height = 150;
+        
+
+        //console.log(encoder.start());
+
+        
+
+        
+
+        // encoder.addFrame(context);
+
+        ///////////////////////////////////////////////
+
+        var contMinutos=59;
+        
+        document.getElementById("secondsCounter").innerHTML = (contMinutos<10?"0":"")+contMinutos.toString();
+        
+        var e =document.getElementById("canvasDrawer");
+        
+        for(contMinutos=59;contMinutos>=0;contMinutos--)
+        {
+            console.log(contMinutos)
+            document.getElementById("secondsCounter").innerHTML = (contMinutos<10?"0":"")+(contMinutos.toString());
+
+            var canvas2=await html2canvas(document.querySelector("#capture"));
+
+            if(contMinutos==59)
+            {
+                e.appendChild(canvas2);
+
+                encoder.setSize(canvas2.width,canvas2.height);
+                var ctx=canvas2.getContext("2d");
+                ctx.save();
+                await encoder.start()
+                encoder.addFrame(ctx);
+            }
+            else
+            {
+                //console.log(canvas2)
+                e.appendChild(canvas2);
+
+                var ctx=canvas2.getContext("2d");
+                ctx.save();
+                encoder.addFrame(ctx);
+            }
+                
+
+            
+            
+            // html2canvas(document.querySelector("#capture")).then(canvas2 => {
+            //    
+            //     var ctx=canvas2.getContext("2d");
+            //     ctx.save();
+            //     e.appendChild(canvas2);
+            //     //encoder.addFrame(ctx);
+            // });
+
+        }
+
+        encoder.finish();
+        encoder.download("minutos.gif");
+
+        // var t=setInterval(()=>{
+        //     contMinutos=contMinutos-1;
+        //     if(contMinutos<0)
+        //         contMinutos=59;
+        //     document.getElementById("secondsCounter").innerHTML = contMinutos;
+
+            
+
+        //     html2canvas(document.querySelector("#capture")).then(canvas2 => {
+        //         var e =document.getElementById("canvasDrawer");
+                
+        //         var child = e.lastElementChild; 
+        //         while (child) {
+        //             e.removeChild(child);
+        //             child = e.lastElementChild;
+        //         }
+        //         e.appendChild(canvas2)
+        //     });
+
+        // },1000);
+
+        // ///////////////////////////////////////////////
+
+        // // encoder.addFrame(context);
+
+
+
+        // encoder.finish();
+        // encoder.download("download.gif");
+        }
+
+
+        testCanvasGif()
+
+    </script>
+</body>
+</html>

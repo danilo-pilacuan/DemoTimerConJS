@@ -1,0 +1,74 @@
+
+
+
+
+    <script type="text/javascript">
+        var degrees = 0;
+        var progressColor = '#009530';
+        var circleColor = '#fff';
+        var lineWidth = 9;
+        
+        function drawProgress() {
+            drawProgressBar(degrees);
+            degrees = degrees + 10;
+        }
+        function drawProgressBar(degrees) {
+            var canvas = document.getElementById('canvasProgress');
+            if (canvas) {
+                var ctx = canvas.getContext('2d');
+                var canvasWidth = canvas.width *.5;
+                var canvasHeight = canvas.height *.5;
+                var radians = 0;
+
+                ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+                // backgroud circle
+                ctx.beginPath();
+                ctx.strokeStyle = circleColor;
+                ctx.lineWidth = lineWidth;
+                ctx.shadowBlur = 5;
+                ctx.shadowColor = "#9fa0a4";
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 1;
+                ctx.arc(canvasHeight / 2, canvasWidth / 2, canvasWidth / 3, 0, Math.PI * 4, false);
+                ctx.imageSmoothingEnabled = true;
+                ctx.closePath();
+                ctx.stroke();
+
+                radians = degrees * Math.PI / 50;
+
+                // progressBar
+                ctx.beginPath();
+                ctx.strokeStyle = progressColor;
+                ctx.lineWidth = lineWidth;
+                ctx.arc(canvasHeight / 2, canvasWidth / 2, canvasWidth / 3, 0 - 90 * Math.PI / 180, radians - 90 * Math.PI / 180, false);
+                ctx.stroke();
+
+                // progress update text
+                ctx.fillStyle = "#333333";
+                ctx.font = '22pt headerCustomFont';
+                ctx.shadowBlur = 0;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 0;
+                ctx.textAlign = "center";
+                ctx.fillText('%', canvasWidth / 2 + 30, canvasHeight / 2 - 3);
+                var outputTextPerc = degrees;
+                if (degrees === 100) {
+                    ctx.fillText(outputTextPerc, canvasWidth / 2 - 8, canvasHeight / 2 - 3);
+                } else {
+                    ctx.fillText(outputTextPerc, canvasWidth / 2 - 4, canvasHeight / 2 - 3);
+                }
+
+                ctx.font = '12pt headerCustomFont';
+                ctx.fillText("Complete", canvasWidth / 2, canvasHeight / 2 + 28);
+            }
+        }
+    </script>
+
+<body>
+    <div>
+        <button onclick="drawProgress()">Click Here</button>
+        <canvas id="canvasProgress" width="500" height="500"></canvas>
+    </div>
+</body>
+</html>
